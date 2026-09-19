@@ -1,5 +1,5 @@
 # Markdown + PDFs
-/research
+research/
 
 # Agent rules
 AGENTS.md
@@ -9,6 +9,11 @@ CLAUDE.md
 *.o
 *.a
 *.so
+
+# Build
+build/
+cmake-build-debug/
+cmake-build-debug-docker/
 
 # CLion
 .idea/
