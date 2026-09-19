@@ -61,5 +61,7 @@ int pthread_join(pthread_t thread, void** retval) {
             _exit(127);
         }
     } 
+
+    log_line("join\n");
     return real_join(thread, retval);
 }
