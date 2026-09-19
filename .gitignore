@@ -1,9 +1,17 @@
+# Markdown + PDFs
 /research
+
+# Agent rules
+AGENTS.md
+CLAUDE.md
 
 # Object files and libraries
 *.o
 *.a
 *.so
+
+# CLion
+.idea/
 
 # MacOS
 .DS_Store
