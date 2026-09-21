@@ -16,3 +16,4 @@ find_package(Threads REQUIRED)
 enable_testing()
 
 add_subdirectory(tools/tests)
+add_subdirectory(src)
