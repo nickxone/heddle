@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
 project(heddle LANGUAGES C CXX)
 
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(FATAL_ERROR "heddle builds on Linux only (LD_PRELOAD, ELF). "
             "Use the Docker toolchain or ./docker/run.sh.")
@@ -15,5 +19,5 @@ add_compile_options(-Wall -Wextra)
 find_package(Threads REQUIRED)
 enable_testing()
 
-add_subdirectory(tools/tests)
 add_subdirectory(src)
+add_subdirectory(tests)
