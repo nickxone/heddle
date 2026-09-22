@@ -4,7 +4,7 @@
 #include "strategy.h"
 
 namespace heddle {
-    class RandomStrategy : public Strategy {
+    class RandomStrategy final : public Strategy {
     public:
         explicit RandomStrategy(std::uint64_t seed) noexcept : rng_(seed) {
         }

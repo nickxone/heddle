@@ -3,7 +3,7 @@
 #include <cstdint>
 
 namespace heddle {
-    enum class ThreadId: std::uint8_t {};
+    enum class ThreadId: std::uint32_t {};
 
     inline constexpr ThreadId kMainThread{0};
 
