@@ -23,8 +23,7 @@ namespace heddle {
             assert(n > 0);
             const std::uint64_t threshold = (std::uint64_t{0} - n) % n;
             for (;;) {
-                const std::uint64_t x = next();
-                if (x >= threshold) {
+                if (const std::uint64_t x = next(); x >= threshold) {
                     return x % n;
                 }
             }
