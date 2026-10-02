@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "shim/rng.h"
+#include "../../src/core/rng.h"
 
 using heddle::SplitMix64;
 

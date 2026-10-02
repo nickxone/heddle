@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "shim/random_strategy.h"
+#include "../../src/core/random_strategy.h"
 
 using heddle::RandomStrategy;
 using heddle::SchedulingContext;
@@ -33,11 +33,11 @@ TEST(RandomStrategy, AlwaysChoosesARunnableThread) {
     }
 }
 
-TEST(RandomStratey, SameSeedGivesSameChoices) {
+TEST(RandomStrategy, SameSeedGivesSameChoices) {
     EXPECT_EQ(choices(99, 200), choices(99, 200));
 }
 
-TEST(RandomStratey, DifferentSeedsGiveDifferentChoices) {
+TEST(RandomStrategy, DifferentSeedsGiveDifferentChoices) {
     EXPECT_NE(choices(1, 200), choices(2, 200));
 }
 
