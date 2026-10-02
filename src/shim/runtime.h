@@ -6,8 +6,6 @@
 #include "../core/ids.h"
 
 namespace heddle {
-    inline constexpr std::uint32_t kMaxThreads = 64;
-
     enum class Op : std::uint8_t {
         ThreadStart = 0,
         ThreadCreate = 1,

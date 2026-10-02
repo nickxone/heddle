@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../src/core/random_strategy.h"
+#include "core/random_strategy.h"
 
 using heddle::RandomStrategy;
 using heddle::SchedulingContext;
