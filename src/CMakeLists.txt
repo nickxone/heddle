@@ -1,13 +1,23 @@
-add_library(heddle_core STATIC
-        core/random_strategy.cpp
-        core/model.cpp
-        core/scheduler.cpp)
-target_include_directories(heddle_core PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR})
-set_target_properties(heddle_core PROPERTIES
-        POSITION_INDEPENDENT_CODE ON)
-target_compile_options(heddle_core PRIVATE
-        -fvisibility=hidden -ftls-model=initial-exec)
+function(heddle_add_core name)
+    add_library(${name} STATIC
+            core/random_strategy.cpp
+            core/model.cpp
+            core/scheduler.cpp)
+    target_include_directories(${name} PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR})
+    set_target_properties(${name} PROPERTIES
+            POSITION_INDEPENDENT_CODE ON)
+    target_compile_options(${name} PRIVATE
+            -fvisibility=hidden -ftls-model=initial-exec)
+endfunction()
+
+heddle_add_core(heddle_core)
+
+if (HEDDLE_SANITIZE)
+    heddle_add_core(heddle_core_sanitized)
+    target_compile_options(heddle_core_sanitized PUBLIC ${HEDDLE_SANITIZER_FLAGS})
+    target_link_options(heddle_core_sanitized PUBLIC ${HEDDLE_SANITIZER_FLAGS})
+endif ()
 
 add_library(heddle_shim SHARED
         shim/runtime.cpp shim/interpose.cpp)
