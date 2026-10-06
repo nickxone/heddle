@@ -58,7 +58,7 @@ namespace heddle {
         Model() noexcept;
 
         [[nodiscard]] std::optional<ThreadId> spawn() noexcept;
-
+        // announce what thread wants to do next
         void announce(ThreadId id, const Event &next) noexcept;
         // indicates whether thread can finish without blocking (given that is has the token)
         [[nodiscard]] bool enabled(ThreadId id) const noexcept;

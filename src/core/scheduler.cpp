@@ -1,5 +1,8 @@
 #include "core/scheduler.h"
 
+#include <cstdint>
+#include <variant>
+
 namespace heddle {
 Decision decide(const Model &model, Strategy &strategy, const ThreadId current,
                 const std::uint64_t step) {

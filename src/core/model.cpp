@@ -56,21 +56,23 @@ Violation Model::commit(const ThreadId id) noexcept {
 
     assert(thread.pending.has_value());
 
-    auto overloaded = Overloaded{[&](const MutexLock &e) {
-                                     const bool res = held_.acquire(e.mutex, id);
-                                     return res ? Violation::None : Violation::TooManyHeldMutexes;
-                                 },
-                                 [&](const MutexUnlock &e) {
-                                     const bool res = held_.release(e.mutex, id);
-                                     return res ? Violation::None : Violation::UnlockNotOwned;
-                                 },
-                                 [&](const ThreadExit &) {
-                                     thread.status = ThreadStatus::Finished;
-                                     return Violation::None;
-                                 },
-                                 [](const ThreadStart &) { return Violation::None; },
-                                 [](const ThreadCreate &) { return Violation::None; },
-                                 [](const ThreadJoin &) { return Violation::None; }};
+    auto overloaded = Overloaded{
+        [&](const MutexLock &e) {
+            const bool res = held_.acquire(e.mutex, id);
+            return res ? Violation::None : Violation::TooManyHeldMutexes;
+        },
+        [&](const MutexUnlock &e) {
+            const bool res = held_.release(e.mutex, id);
+            return res ? Violation::None : Violation::UnlockNotOwned;
+        },
+        [&](const ThreadExit &) {
+            thread.status = ThreadStatus::Finished;
+            return Violation::None;
+        },
+        [](const ThreadStart &) { return Violation::None; },
+        [](const ThreadCreate &) { return Violation::None; },
+        [](const ThreadJoin &) { return Violation::None; },
+    };
     const Violation violation = std::visit(overloaded, *thread.pending);
     thread.pending.reset();
     return violation;
