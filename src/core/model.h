@@ -39,9 +39,9 @@ namespace heddle {
     public:
         [[nodiscard]] std::optional<ThreadId> owner(const void *mutex) const noexcept;
 
-        [[nodiscard]] bool acquire(const void *mutex, ThreadId owner) noexcept;
+        [[nodiscard]] bool acquire(const void *mutex, ThreadId thread) noexcept;
 
-        [[nodiscard]] bool release(const void *mutex, ThreadId owner) noexcept;
+        [[nodiscard]] bool release(const void *mutex, ThreadId thread) noexcept;
 
     private:
         struct Entry {

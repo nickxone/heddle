@@ -83,7 +83,7 @@ TEST(Model, RelockingHeldMutexSelfDeadlocks) {
     EXPECT_TRUE(model.any_live());
 }
 
-TEST(Model, JoinIsEnabledOnlyAfterTargetExists) {
+TEST(Model, JoinIsEnabledOnlyAfterTargetExits) {
     Model model;
     const ThreadId child = model.spawn().value();
 
@@ -170,4 +170,10 @@ TEST(ModelDeathTest, CommittingDisabledEventAsserts) {
     model.announce(other, MutexLock{&mutex_a});
 
     EXPECT_DEBUG_DEATH(static_cast<void>(model.commit(other)), "");
+}
+
+TEST(Model, ThreadIsRunnableAfterCommittingItsLock) {
+    Model model;
+    ASSERT_EQ(run(model, kMainThread, MutexLock{&mutex_a}), Violation::None);
+    EXPECT_TRUE(model.enabled(kMainThread));
 }

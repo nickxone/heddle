@@ -1,6 +1,7 @@
 add_library(heddle_core STATIC
         core/random_strategy.cpp
-        core/model.cpp)
+        core/model.cpp
+        core/scheduler.cpp)
 target_include_directories(heddle_core PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(heddle_core PROPERTIES
