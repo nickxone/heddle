@@ -1,0 +1,7 @@
+InheritParentConfig: true
+Checks: >
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-special-member-functions,
+  -misc-use-anonymous-namespace,
+  -readability-function-cognitive-complexity
