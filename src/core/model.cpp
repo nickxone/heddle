@@ -31,7 +31,7 @@ namespace heddle {
     }
 
     ThreadStatus Model::status(ThreadId id) const noexcept {
-        assert(index(id) < kMaxHeldMutexes);
+        assert(index(id) < kMaxThreads);
         return threads_[index(id)].status;
     }
 
@@ -40,19 +40,24 @@ namespace heddle {
         if (thread.status != ThreadStatus::Live) {
             return false;
         }
+        if (!thread.pending) {
+            return true;
+        }
 
         return std::visit
         (Overloaded{
              [&](const MutexLock &e) { return !held_.owner(e.mutex).has_value(); },
              [&](const ThreadJoin &e) { return status(e.target) == ThreadStatus::Finished; },
              [](const auto &) { return true; }
-         }, thread.pending);
+         }, *thread.pending);
     }
 
     Violation Model::commit(const ThreadId id) noexcept {
         assert(enabled(id));
 
-        auto &[thread_status, pending] = threads_[index(id)];
+        Thread &thread = threads_[index(id)];
+
+        assert(thread.pending.has_value());
 
         auto overloaded = Overloaded{
             [&](const MutexLock &e) {
@@ -64,15 +69,16 @@ namespace heddle {
                 return res ? Violation::None : Violation::UnlockNotOwned;
             },
             [&](const ThreadExit &) {
-                thread_status = ThreadStatus::Finished;
+                thread.status = ThreadStatus::Finished;
                 return Violation::None;
             },
             [](const ThreadStart &) { return Violation::None; },
             [](const ThreadCreate &) { return Violation::None; },
             [](const ThreadJoin &) { return Violation::None; }
         };
-
-        return std::visit(overloaded, pending);
+        const Violation violation = std::visit(overloaded, *thread.pending);
+        thread.pending.reset();
+        return violation;
     }
 
     ThreadSet Model::runnable() const noexcept {

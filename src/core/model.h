@@ -60,7 +60,7 @@ namespace heddle {
         [[nodiscard]] std::optional<ThreadId> spawn() noexcept;
 
         void announce(ThreadId id, const Event &next) noexcept;
-
+        // indicates whether thread can finish without blocking (given that is has the token)
         [[nodiscard]] bool enabled(ThreadId id) const noexcept;
 
         [[nodiscard]] Violation commit(ThreadId id) noexcept;
@@ -74,7 +74,7 @@ namespace heddle {
     private:
         struct Thread {
             ThreadStatus status = ThreadStatus::Unused;
-            Event pending = ThreadStart{};
+            std::optional<Event> pending = ThreadStart{};
         };
 
         std::array<Thread, kMaxThreads> threads_{};
