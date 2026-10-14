@@ -20,7 +20,10 @@ if (HEDDLE_SANITIZE)
 endif ()
 
 add_library(heddle_shim SHARED
-        shim/runtime.cpp shim/interpose.cpp)
+        shim/fatal.cpp
+        shim/real.cpp
+        shim/runtime.cpp
+        shim/interpose.cpp)
 target_link_options(heddle_shim PRIVATE
         "LINKER:--version-script=${CMAKE_CURRENT_SOURCE_DIR}/shim/exports.ver")
 target_compile_options(heddle_shim PRIVATE
