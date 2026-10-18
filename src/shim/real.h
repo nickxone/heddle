@@ -3,7 +3,7 @@
 #include <pthread.h>
 
 namespace heddle {
-struct RealFns { // used `&::` to ensure that functions come from global namespace
+struct RealFns {
     decltype(&::pthread_create) create;
     decltype(&::pthread_join) join;
     decltype(&::pthread_exit) exit;

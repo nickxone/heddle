@@ -1,7 +1,11 @@
 #pragma once
 
+#include <cstdint>
+
 namespace heddle {
-inline constexpr int kExitDeadlock = 120;
-inline constexpr int kExitViolation = 121;  // illegal operation
-inline constexpr int kExitInternalError = 122;
+enum class ExitCode : std::uint8_t {
+    Deadlock = 120,
+    Violation = 121,  // illegal operation
+    InternalError = 122
+};
 }  // namespace heddle

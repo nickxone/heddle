@@ -39,7 +39,7 @@ void resolve_all() noexcept {
     g_resolved.store(true, std::memory_order_release);
 }
 
-// indicate to the compiler that the functions need to be pre-loaded early
+// indicate to the compiler that the pointers to functions need to be looked up early
 [[gnu::constructor(101)]] void resolve_at_load() noexcept { static_cast<void>(real()); }
 
 }  // namespace

@@ -1,50 +1,51 @@
 #pragma once
 
-#include <cstdint>
-#include <variant>
+#include <pthread.h>
 
-#include "../core/ids.h"
+#include <array>
+#include <cstdint>
+#include <optional>
+#include <semaphore>
+
+#include "core/model.h"
+#include "core/random_strategy.h"
+#include "core/scheduler.h"
 
 namespace heddle {
-    enum class Op : std::uint8_t {
-        ThreadStart = 0,
-        ThreadCreate = 1,
-        ThreadJoin = 2,
-        ThreadExit = 3,
-        MutexLock = 4,
-        MutexUnlock = 5,
+using StartRoutine = void *(*)(void *);
+
+class Runtime {
+  public:
+    explicit Runtime(std::uint64_t seed) noexcept;
+
+    void schedule(const Event &next) noexcept;
+
+    [[nodiscard]] int create_thread(pthread_t *thread, const pthread_attr_t *attr,
+                                         StartRoutine start, void *arg) noexcept;
+    [[nodiscard]] std::optional<ThreadId> find(pthread_t handle) const noexcept;
+    void exit_current() noexcept;
+
+  private:
+    using Token = std::binary_semaphore;
+
+    struct Slot {
+        Token token{0};
+        pthread_t handle{};
+        StartRoutine start = nullptr;
+        void *arg = nullptr;
     };
 
-    struct ThreadStart {
-        static constexpr auto kOp = Op::ThreadStart;
-    };
+    static void *run_child(void *encoded_id);
 
-    struct ThreadCreate {
-        static constexpr auto kOp = Op::ThreadCreate;
-    };
+    [[nodiscard]] Slot &slot(ThreadId id) noexcept;
+    void hand_off(const Decision &decision) noexcept;
+    void check(Violation violation) noexcept;
 
-    struct ThreadJoin {
-        static constexpr auto kOp = Op::ThreadJoin;
-        ThreadId target;
-    };
+    Model model_;
+    RandomStrategy strategy_;
+    std::uint64_t step_ = 0;
+    std::array<Slot, kMaxThreads> slots_;
+};
 
-    struct ThreadExit {
-        static constexpr auto kOp = Op::ThreadExit;
-    };
-
-    struct MutexLock {
-        static constexpr auto kOp = Op::MutexLock;
-        const void *mutex;
-    };
-
-    struct MutexUnlock {
-        static constexpr auto kOp = Op::MutexUnlock;
-        const void *mutex;
-    };
-
-    // Job that thread is about to do
-    using Event = std::variant<ThreadStart, ThreadCreate, ThreadJoin,
-        ThreadExit, MutexLock, MutexUnlock>;
-
-    void initialise();
-}
+[[nodiscard]] Runtime *current_runtime() noexcept;
+}  // namespace heddle

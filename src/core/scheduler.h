@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <variant>
+
 #include "core/model.h"
 #include "core/strategy.h"
 
