@@ -21,7 +21,7 @@ declare -A seen=()
 for seed in $(seq 1 "$seeds"); do
     status=0
     HEDDLE_SEED=$seed LD_PRELOAD=$shim timeout 10 "$@" > /dev/null 2>&1 || status=$?
-    if [[ ! " ${expected[*]} " =~  $status  ]]; then
+    if [[ ! " ${expected[*]} " =~ " $status " ]]; then
         echo "seed $seed: exit $status, expected one of {$codes}" >&2
         exit 1
     fi
