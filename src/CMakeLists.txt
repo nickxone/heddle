@@ -32,3 +32,13 @@ set_target_properties(heddle_shim PROPERTIES
         LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/shim/exports.ver)
 target_link_libraries(heddle_shim PRIVATE
         heddle_core Threads::Threads ${CMAKE_DL_LIBS})
+
+add_library(heddle_driver STATIC
+        driver/launcher.cpp
+        driver/options.cpp
+        driver/outcome.cpp)
+target_include_directories(heddle_driver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(heddle driver/main.cpp)
+target_link_libraries(heddle PRIVATE heddle_driver)
+add_dependencies(heddle heddle_shim)
