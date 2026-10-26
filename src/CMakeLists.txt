@@ -38,6 +38,7 @@ add_library(heddle_driver STATIC
         driver/options.cpp
         driver/outcome.cpp)
 target_include_directories(heddle_driver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(heddle_driver PRIVATE CLI11::CLI11)
 
 add_executable(heddle driver/main.cpp)
 target_link_libraries(heddle PRIVATE heddle_driver)

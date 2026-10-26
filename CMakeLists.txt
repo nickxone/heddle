@@ -33,6 +33,7 @@ set(HEDDLE_SANITIZER_FLAGS
         -fno-omit-frame-pointer)
 
 find_package(Threads REQUIRED)
+find_package(CLI11 CONFIG REQUIRED)
 enable_testing()
 
 add_subdirectory(src)
