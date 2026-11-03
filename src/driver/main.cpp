@@ -37,6 +37,7 @@ DriverExit run(const Options &options) {
 
     for (std::uint64_t seed = options.first_seed; seed < options.first_seed + options.seed_count;
          ++seed) {
+        ++runs;
         const RunResult result = launcher.run(seed, single_seed ? Output::Inherit : Output::Silent);
         if (result.outcome == Outcome::Pass) {
             continue;
@@ -50,7 +51,7 @@ DriverExit run(const Options &options) {
         if (result.outcome == Outcome::InternalError) {
             return DriverExit::Error;
         }
-        std::cout << std::format("reproduce: heddle run --sed {} -- {}\n", seed,
+        std::cout << std::format("reproduce: heddle run --seed {} -- {}\n", seed,
                                  join(options.command));
         ++failures;
         if (!options.carry_on) {
@@ -64,7 +65,7 @@ DriverExit run(const Options &options) {
 
 int main(int argc, char **argv) {
     try {
-        return static_cast<int>(run(parse_options(argc, argv)));;
+        return static_cast<int>(run(parse_options(argc, argv)));
     } catch (const ExitRequest &request) {
         return static_cast<int>(request.success ? DriverExit::NoFailures : DriverExit::Error);
     } catch (const std::exception &error) {

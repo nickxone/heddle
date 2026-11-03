@@ -15,8 +15,10 @@ constexpr int code(ExitCode exit_code) noexcept { return static_cast<int>(exit_c
 RunResult classify(const int wait_status, const bool timed_out) noexcept {
     if (timed_out) return {.outcome = Outcome::Hang};
     if (WIFSIGNALED(wait_status)) {
-        return {.outcome = Outcome::Crash,
-                .detail = WTERMSIG(wait_status)};  // check if child process was terminated
+        return {
+            .outcome = Outcome::Crash,
+            .detail = WTERMSIG(wait_status),  // check if child process was terminated
+        };
     }
 
     const int exit_code = WEXITSTATUS(wait_status);
