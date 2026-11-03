@@ -14,5 +14,5 @@ add_executable(unit_tests
         scheduler_test.cpp
         driver_test.cpp
 )
-target_link_libraries(unit_tests PRIVATE ${core} GTest::gmock GTest::gtest_main)
+target_link_libraries(unit_tests PRIVATE ${core} heddle_driver GTest::gmock GTest::gtest_main)
 gtest_discover_tests(unit_tests TEST_PREFIX "unit.")
