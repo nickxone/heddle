@@ -1,0 +1,6 @@
+heddle_integration_test(relock.c SEEDS 20 ALWAYS deadlock)
+heddle_integration_test(unlock_not_owned.c SEEDS 20 ALWAYS "wrong use")
+heddle_integration_test(lock_then_join.c SEEDS 20 ALWAYS deadlock)
+heddle_integration_test(counter.c SEEDS 50)
+heddle_integration_test(thread_exit.c SEEDS 50)
+heddle_integration_test(abba.c SEEDS 100 SOMETIMES deadlock)
