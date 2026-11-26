@@ -7,6 +7,7 @@
 #include <string_view>
 #include <variant>
 
+#include "core/parse.h"
 #include "shim/fatal.h"
 #include "shim/real.h"
 
@@ -35,22 +36,12 @@ ThreadId decode(void *encoded) noexcept {
     return static_cast<ThreadId>(reinterpret_cast<std::uintptr_t>(encoded));
 }
 
-std::optional<std::uint64_t> parse_seed(std::string_view text) noexcept {
-    std::uint64_t seed = 0;
-    const char *last = text.data() + text.size();
-    const auto [end, error] = std::from_chars(text.data(), last, seed);
-    if (error != std::errc() || end != last) {
-        return std::nullopt;
-    }
-    return seed;
-}
-
 [[gnu::constructor]] void start_runtime() noexcept {
     const char *env = std::getenv("HEDDLE_SEED");
     if (env == nullptr) {
         return;
     }
-    const std::optional<std::uint64_t> seed = parse_seed(env);
+    const std::optional<std::uint64_t> seed = parse_number<std::uint64_t>(env);
     if (!seed) {
         fatal({"HEDDLE_SEED is not a valid seed: ", env});
     }
